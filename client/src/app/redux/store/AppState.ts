@@ -1,0 +1,3 @@
+interface AppState {
+  counter: number;
+}

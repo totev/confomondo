@@ -1,0 +1,31 @@
+.main{
+    background: rgb(250, 250, 250);
+    margin: 2em auto;
+}
+
+.counter{
+    font-size: 400%;
+}
+
+.user{
+    margin-left: 10px;
+}
+
+.user-name {
+    font-weight: bold;
+
+}
+.connected-status {
+    display: inline-grid;
+    background-color: red;
+    border-radius: 50%;
+    margin-top: 5px;
+    width: 15px;
+    height: 15px;
+}
+.connected-status.offline {
+    background-color: red;
+}
+.connected-status.online {
+    background-color: green;
+}

@@ -8,6 +8,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { counterReducer } from './redux/reducer/test';
 import { AppComponent } from './app.component';
 import { reducers, metaReducers } from "./app.reducer";
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MdButtonModule, MdInputModule, MdIconModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -15,8 +17,13 @@ import { reducers, metaReducers } from "./app.reducer";
   ],
   imports: [
     BrowserModule,
+    // store bootstrapping with init call and combined reducers
     StoreModule.forRoot(reducers, {metaReducers}),
-    EffectsModule.forRoot([AppEventBusEffects])
+    // store side effects interceptors
+    EffectsModule.forRoot([AppEventBusEffects]),
+    // material design
+    NoopAnimationsModule,
+    MdButtonModule, MdInputModule, MdIconModule
   ],
   providers: [
     EventBusService,

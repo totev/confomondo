@@ -1,13 +1,13 @@
-package de.endofco.confomondo;
+package de.endofco.confomondo.service;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CounterService {
 
-    static final String INCREMENT = "[Counter] Increment";
-    static final String DECREMENT = "[Counter] Decrement";
-    static final String RESET = "[Counter] Reset";
-    static final String TOTAL = "[Counter] Total";
+    public static final String INCREMENT = "[Counter] Increment";
+    public static final String DECREMENT = "[Counter] Decrement";
+    public static final String RESET = "[Counter] Reset";
+    public static final String TOTAL = "[Counter] Total";
 
     private AtomicInteger total = new AtomicInteger(0);
 

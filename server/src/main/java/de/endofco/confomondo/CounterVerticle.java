@@ -1,12 +1,12 @@
 package de.endofco.confomondo;
 
-import de.endofco.confomondo.model.CounterAction;
+import de.endofco.confomondo.model.UsersAction;
+import de.endofco.confomondo.service.CounterService;
+import de.endofco.confomondo.service.UsersService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
@@ -16,12 +16,14 @@ import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static de.endofco.confomondo.CounterService.TOTAL;
+import static de.endofco.confomondo.service.CounterService.TOTAL;
 
 public class CounterVerticle extends AbstractVerticle {
 
     static final Logger LOG = LoggerFactory.getLogger(CounterVerticle.class);
+    public static final String EB_SERVICE_COUNTER_USERS_SYNC = "service.counter.users.sync";
     CounterService counterService = new CounterService();
+    final UsersService usersService = new UsersService();
 
 
     @Override
@@ -34,6 +36,9 @@ public class CounterVerticle extends AbstractVerticle {
 
         BridgeOptions options = new BridgeOptions();
         options
+                .addOutboundPermitted(new PermittedOptions().setAddress("service.counter.users"))
+                .addInboundPermitted(new PermittedOptions().setAddress(EB_SERVICE_COUNTER_USERS_SYNC))
+                .addInboundPermitted(new PermittedOptions().setAddress("service.counter.users"))
                 .addOutboundPermitted(new PermittedOptions().setAddress("service.counter.actions"))
                 .addInboundPermitted(new PermittedOptions().setAddress("service.counter.total"))
                 .addInboundPermitted(new PermittedOptions().setAddress("service.counter.actions"));
@@ -78,6 +83,9 @@ public class CounterVerticle extends AbstractVerticle {
             message.reply(message);
         });
 
+        // intercept any new user logins messages and reflect their command to the local store
+        eb.consumer("service.counter.users", message -> this.handleUserAction(message));
+        eb.consumer(EB_SERVICE_COUNTER_USERS_SYNC, message -> this.handleUserAction(message));
 
         eb.consumer("service.counter.total", message -> {
             final int total = this.counterService.handleEvent(TOTAL);
@@ -87,5 +95,31 @@ public class CounterVerticle extends AbstractVerticle {
 
 
     }
+
+    /**
+     * @param message
+     */
+    public void handleUserAction(Message<Object> message) {
+
+        LOG.debug("Actions!: {}", message.body());
+        final JsonObject newUser = JsonObject.mapFrom(message.body());
+        UsersAction ua = new UsersAction();
+
+        if (newUser != null) {
+            String event = newUser.getString("type");
+            String currentUser = newUser.getString("payload");
+            LOG.debug("New user logged in: {}", currentUser);
+
+            ua.setType(event);
+            LOG.debug("Getting event type: {}", event);
+            ua.setPayload(this.usersService.handleEvent(event, currentUser));
+
+        }
+
+        JsonObject currentUsers = JsonObject.mapFrom(ua);
+        LOG.debug("Current users in the system: {}", currentUsers);
+        message.reply(currentUsers);
+    }
+
 
 }

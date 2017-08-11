@@ -3,11 +3,13 @@ import { ActionReducerMap, ActionReducer, State } from '@ngrx/store';
 import { environment } from '../environments/environment';
 import { counterReducer } from './counter/counter.reducer';
 import { userReducer } from './user';
+import { usersReducer } from './users';
 
 
 export const reducers: ActionReducerMap<AppState> = {
     counter: counterReducer,
-    user: userReducer
+    user: userReducer,
+    users: usersReducer
 };
 
 

@@ -1,3 +1,4 @@
+import { UsersState } from './users/users.state';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/observable/interval';
@@ -6,6 +7,7 @@ import 'rxjs/add/operator/map';
 import { AppState } from './app.state';
 import * as CounterActions from './counter/counter.actions';
 import * as UserActions from "./user/user.actions";
+import * as UsersActions from './users/users.actions';
 import { EventBusService } from './shared/event-bus.service';
 import { RemoteAction } from "./shared/remote-action.model";
 import { environment } from "../environments/environment";
@@ -49,11 +51,16 @@ export class AppEventBusService {
         this.eventBusService.open.subscribe(() => {
             console.debug('AppEventBusService.open');
             this.subscribeToActions(EventBusConstants.COUNTER_ACTIONS_EVENT_BUS_ADDRESS);
+            // subscribe to the users eventbus
+            this.subscribeToActions(EventBusConstants.COUNTER_USERS_EVENT_BUS_ADDRESS);
 
             this.initializeCounter();
-
+            this.serverJoin();
+            this.synchronizeUsers();
             this.store.dispatch(new UserActions.ConnectionOpenedAction());
         });
+
+
         // Connect
         console.debug("AppEventBusService.connect " + environment.eventBusURL);
         this.eventBusService.connect(environment.eventBusURL, this.buildHeaders());
@@ -76,6 +83,31 @@ export class AppEventBusService {
                     let localAction = new CounterActions.ResetAction();
                     localAction.payload = message.body;
                     this.store.dispatch(localAction);
+                }
+                if (error) {
+                    console.error(error);
+                }
+            });
+        }
+    }
+
+
+    /** 
+     * Notify the listeners of the user's sign in
+     */
+    serverJoin() {
+        const joinAction = new UsersActions.JoinAction(this.currentUser);
+        this.publishAction(joinAction);
+    }
+
+    synchronizeUsers(): void {
+        if (!this.enabled) return;
+        if (this.connected) {
+            const userSync = new UsersActions.SyncAction();
+            this.eventBusService.send(EventBusConstants.COUNTER_USERS_SYNC_EVENT_BUS_ADDRESS, userSync, (error, message) => {
+                if (message && message.body) {
+
+                    this.store.dispatch(<any>message.body);
                 }
                 if (error) {
                     console.error(error);

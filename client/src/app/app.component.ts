@@ -1,7 +1,6 @@
 import { CounterState } from './counter/counter.state';
 import { UserState } from './user/user.state';
 import { AppState } from './app.state';
-import { INCREMENT, DECREMENT, RESET } from './redux/reducer/test';
 import { Component } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { Store } from "@ngrx/store";

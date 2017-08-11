@@ -9,23 +9,23 @@ public class CounterService {
     public static final String RESET = "[Counter] Reset";
     public static final String TOTAL = "[Counter] Total";
 
-    private AtomicInteger total = new AtomicInteger(0);
+    private volatile Integer total = new Integer(0);
 
     public int handleEvent(String eventType) {
         int result;
         switch (eventType) {
             case INCREMENT:
-                result = this.total.incrementAndGet();
+                result = ++this.total;
                 break;
             case DECREMENT:
-                result = this.total.decrementAndGet();
+                result = --this.total;
                 break;
             case RESET:
-                this.total.set(0);
+                this.total = 0;
                 result = 0;
                 break;
             case TOTAL:
-                result = this.total.get();
+                result = this.total.intValue();
                 break;
             default:
                 result = 0;

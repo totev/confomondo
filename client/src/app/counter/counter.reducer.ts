@@ -8,18 +8,21 @@ export function counterReducer(state = initialCounterState, action: CounterActio
 
         case CounterActionTypes.INCREMENT:
             return Object.assign({}, state, {
-                total: state.total + 1
+                total: state.total + 1,
+                lastChangeBy: action.publishedByUser
             });
 
         case CounterActionTypes.DECREMENT:
             return Object.assign({}, state, {
-                total: state.total - 1
+                total: state.total - 1,
+                lastChangeBy: action.publishedByUser
             });
 
         case CounterActionTypes.RESET:
             if (action.payload) {
                 return Object.assign({}, state, {
-                    total: action.payload
+                    total: action.payload,
+                    lastChangeBy: action.publishedByUser
                 });
             } else {
                 return initialCounterState;

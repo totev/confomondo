@@ -2,7 +2,10 @@
     <div class="l-box">
         <h3>Current players</h3>
         <p>
-            {{(users$ | async)?.names}}
+
+            <span *ngFor="let user of (users$ | async).names as names" [@activeUserState]="(activeUser$ | async) === user">
+                        {{user}}
+            </span>
         </p>
     </div>
 </div>

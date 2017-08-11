@@ -1,0 +1,8 @@
+.activity-blink {
+    animation: blinker 1s linear 500ms;
+  }
+  
+  @keyframes blinker {
+    0% {color:yellow;}  
+    50% { opacity: 0; }
+  }

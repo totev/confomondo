@@ -1,0 +1,7 @@
+<div>
+    <button md-mini-fab (click)="decrement()"><md-icon>arrow_drop_down</md-icon></button>
+    <span class="counter">{{ (counter$ | async)?.total }}</span>
+    <button md-mini-fab (click)="increment()"><md-icon>arrow_drop_up</md-icon></button>
+    <br>
+    <button md-raised-button (click)="reset()">Reset Counter</button>
+</div>

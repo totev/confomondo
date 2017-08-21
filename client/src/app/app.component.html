@@ -1,48 +1,13 @@
-<div class="main">
-  <div class="pure-g">
-    <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
-      <div class="l-box">
-        <h3>Simple counter</h3>
-        <p>
-          Just enter your username and join the counting game with countless others.
-        </p>
-      </div>
-    </div>
+<nav md-tab-nav-bar>
+  <a md-tab-link routerLink="/dashboard"  routerLinkActive #rld="routerLinkActive"
+  [active]="rld.isActive">
+     Random picks dashboard
+  </a>
 
+  <a md-tab-link routerLink="/conference"  routerLinkActive #rla="routerLinkActive"
+  [active]="rla.isActive">
+     Conferences
+  </a>
+</nav>
 
-    <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
-      <div class="l-box">
-        <h3>Current user</h3>
-        <p>
-          <span class="connected-status" [ngClass]="{'online': (user$ | async)?.connected, 'offline': !(user$ | async)?.connected}"></span>
-
-          <span *ngIf="!(user$ | async)?.authenticated" class="user">
-            Why don't you log yourself in below to start the fun?
-          </span>
-          <span class="user-name" *ngIf="(user$ | async)?.authenticated">
-            {{(user$ | async).name}}
-          </span>
-        </p>
-      </div>
-    </div>
-
-    <div class="pure-u-1-3">
-
-    </div>
-    <div class="pure-u-1-3">
-      <div *ngIf="!(user$ | async)?.authenticated">
-        <md-input-container class="example-full-width">
-          <input mdInput placeholder="Username" name="userName" #userName (keyup.enter)="login(userName.value)">
-        </md-input-container>
-      </div>
-
-      <counter *ngIf="(user$ | async)?.authenticated"></counter>
-
-    </div>
-  </div>
-  <div class="pure-u-1-3">
-
-  </div>
-
-  <users></users>
-</div>
+<router-outlet></router-outlet>

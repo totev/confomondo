@@ -1,0 +1,13 @@
+.conference-card {
+    width: 400px;
+  }
+  
+.conference-header-image {
+    background-image: url('../../../assets/images/ng-conf.png');
+    background-size: cover;
+    background-color:red;
+}
+
+.conference-image{
+      background-color:red;
+}

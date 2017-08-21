@@ -1,0 +1,5 @@
+<md-grid-list cols="3" rowHeight="1:1">
+  <md-grid-tile *ngFor="let conf of randomConfs$ | async as list">
+    <app-conference [conference]="conf" [canNavigate]="false"></app-conference>
+  </md-grid-tile>
+</md-grid-list>

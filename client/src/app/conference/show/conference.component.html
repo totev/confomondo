@@ -1,0 +1,17 @@
+<md-card class="conference-card">
+  <md-card-header>
+    <div md-card-avatar class="conference-header-image"></div>
+    <md-card-title>{{conference?.name}}</md-card-title>
+    <md-card-subtitle>{{conference?.topic}}</md-card-subtitle>
+  </md-card-header>
+  <img md-card-image src="{{conference?.logoURL}}" class="conference-image">
+  <md-card-content>
+    <p>
+      {{conference?.details}}
+    </p>
+  </md-card-content>
+  <md-card-actions *ngIf="canNavigate">
+    <button md-button [routerLink]="['/conference','edit', conference?.uuid]">EDIT</button>
+    <button md-button (click)="goBack()">BACK</button>
+  </md-card-actions>
+</md-card>
